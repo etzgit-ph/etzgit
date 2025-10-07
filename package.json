@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install",
-    "postinstall": "pnpm audit --audit-level critical"
+  "build": "pnpm -r run build",
+  "test": "pnpm -r run test",
+  "start:dev": "pnpm -r run start:dev",
+  "prepare": "husky install",
+  "postinstall": "pnpm audit --audit-level critical"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +23,9 @@
     "eslint-plugin-security": "^3.0.1",
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
-    "typescript-eslint": "^8.46.0"
+    "typescript-eslint": "^8.46.0",
+    "@types/node": "^20.7.2",
+    "@types/jest": "^29.5.14"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",

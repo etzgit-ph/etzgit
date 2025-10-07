@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: Autonomous Agent API
+  version: 0.1.0
+paths:
+  /api/v1/run-agent:
+    post:
+      summary: Run the autonomous agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchRequestDTO'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpgradeProposalDTO'
+components:
+  schemas:
+    PatchRequestDTO:
+      type: object
+      properties:
+        filePath:
+          type: string
+        currentContent:
+          type: string
+        goal:
+          type: string
+      required:
+        - filePath
+        - currentContent
+        - goal
+    UpgradeProposalDTO:
+      type: object
+      properties:
+        filePath:
+          type: string
+        proposedContent:
+          type: string
+        rationale:
+          type: string
+      required:
+        - filePath
+        - proposedContent
+        - rationale
