@@ -96,4 +96,40 @@ describe('LLMService', () => {
 
     await expect(service.generatePatch(req)).rejects.toThrow('LLM did not return valid JSON');
   });
+
+  it('rejects payloads missing required fields (zod validation)', async () => {
+    // @ts-ignore
+    const { __mockCreate: mockCreate } = require('openai');
+
+    // Return JSON array missing `rationale` field
+    const invalid = JSON.stringify([{ filePath: 'README.md', proposedContent: 'New' }]);
+    const fakeResp = { choices: [{ message: { content: invalid } }] };
+    mockCreate.mockResolvedValueOnce(fakeResp);
+
+    const req = {
+      filePath: 'README.md',
+      currentContent: 'Old',
+      goal: 'Make better',
+    } as any;
+
+    await expect(service.generatePatch(req)).rejects.toThrow();
+  });
+
+  it('accepts a valid UpgradeProposalDTO array', async () => {
+    // @ts-ignore
+    const { __mockCreate: mockCreate } = require('openai');
+
+    const valid = JSON.stringify([{ filePath: 'README.md', proposedContent: 'New', rationale: 'Because' }]);
+    const fakeResp = { choices: [{ message: { content: valid } }] };
+    mockCreate.mockResolvedValueOnce(fakeResp);
+
+    const req = {
+      filePath: 'README.md',
+      currentContent: 'Old',
+      goal: 'Make better',
+    } as any;
+
+    const out = await service.generatePatch(req);
+    expect(out[0].rationale).toBe('Because');
+  });
 });

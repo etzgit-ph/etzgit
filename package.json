@@ -7,6 +7,7 @@
   "build": "pnpm -r run build",
   "test": "pnpm -r run test",
   "start:dev": "pnpm -r run start:dev",
+  "e2e": "playwright test tests/e2e --workers=1",
   "prepare": "husky install",
   "postinstall": "pnpm audit --audit-level critical"
   },
@@ -26,6 +27,13 @@
     "typescript-eslint": "^8.46.0",
     "@types/node": "^20.7.2",
     "@types/jest": "^29.5.14"
+    ,"next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@playwright/test": "^1.40.0",
+    "playwright": "^1.40.0"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",

@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OpenAI } from 'openai';
 import { PatchRequestDTOSchema, UpgradeProposalDTOSchema, PatchRequestDTO, UpgradeProposalDTO } from '@aca/shared-types';
+import { Throttler, defaultThrottler } from '@aca/utils';
 
 @Injectable()
 export class LLMService {
   private readonly openai: OpenAI;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService, private readonly throttler: Throttler = defaultThrottler) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('LLM_API_KEY'),
     });
@@ -20,6 +21,9 @@ export class LLMService {
     // Build a safe system prompt asking for JSON array output matching UpgradeProposalDTO
     const system = `You are a safe code-review assistant. Respond ONLY with a JSON array matching UpgradeProposalDTO: [{\"filePath\":string, \"proposedContent\":string, \"rationale\":string}]`;
     const user = `File: ${request.filePath}\nGoal: ${request.goal}\nCurrent content:\n${request.currentContent}`;
+
+    // rate-limit LLM calls
+    await this.throttler.acquire();
 
     const resp = await this.openai.chat.completions.create({
       model: 'gpt-4o-mini',

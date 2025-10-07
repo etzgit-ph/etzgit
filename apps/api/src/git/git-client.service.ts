@@ -1,8 +1,9 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { execFileSync } from 'child_process';
 import * as path from 'path';
 import { MODIFIABLE_PATHS } from '@aca/utils';
 import { writeFileSync, readFileSync } from 'fs';
+import { ProtectedPathModificationError } from '@aca/exceptions';
 
 @Injectable()
 export class GitClientService {
@@ -24,14 +25,16 @@ export class GitClientService {
 
   readFile(targetPath: string): string {
     if (!this.isPathAllowed(targetPath)) {
-      throw new ForbiddenException('Path not allowed');
+      // Throw domain-specific error so callers can handle security violations explicitly
+      throw new ProtectedPathModificationError(targetPath);
     }
     return readFileSync(path.resolve(targetPath), { encoding: 'utf-8' });
   }
 
   writeFile(targetPath: string, content: string): void {
     if (!this.isPathAllowed(targetPath)) {
-      throw new ForbiddenException('Path not allowed');
+      // Throw domain-specific error so callers can handle security violations explicitly
+      throw new ProtectedPathModificationError(targetPath);
     }
     writeFileSync(path.resolve(targetPath), content, { encoding: 'utf-8' });
   }
