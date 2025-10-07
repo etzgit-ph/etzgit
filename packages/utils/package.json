@@ -1,0 +1,9 @@
+{
+  "name": "@aca/utils",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.7.0"
+  }
+}

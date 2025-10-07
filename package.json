@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install",
-    "postinstall": "pnpm audit --audit-level critical"
+  "build": "pnpm -r run build",
+  "test": "pnpm -r run test",
+  "start:dev": "pnpm -r run start:dev",
+  "prepare": "husky install",
+  "postinstall": "pnpm audit --audit-level critical"
   },
   "keywords": [],
   "author": "",

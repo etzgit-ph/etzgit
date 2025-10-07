@@ -1,0 +1,11 @@
+{
+  "name": "@aca/shared-types",
+  "version": "0.1.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "vitest": "^3.2.4",
+    "zod": "^4.1.12"
+  }
+}
