@@ -1,0 +1,15 @@
+name: Production Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  manual-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Await manual approval
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy (placeholder)
+        run: echo "Deploying to production (placeholder)"

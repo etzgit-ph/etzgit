@@ -6,6 +6,9 @@
   "scripts": {
   "build": "pnpm -r run build",
   "test": "pnpm -r run test",
+  "test:unit": "pnpm -r --filter api test -- --coverage",
+  "collect-coverage": "bash ./scripts/collect-coverage.sh",
+  "verify": "bash ./scripts/verify.sh",
   "start:dev": "pnpm -r run start:dev",
   "e2e": "playwright test tests/e2e --workers=1",
   "prepare": "husky install",
@@ -33,7 +36,10 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@playwright/test": "^1.40.0",
-    "playwright": "^1.40.0"
+    "playwright": "^1.40.0",
+  "codecov": "^3.8.0",
+  "@vitest/coverage-v8": "^3.2.4",
+  "@vitest/coverage-istanbul": "^3.2.4"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",

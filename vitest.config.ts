@@ -14,8 +14,9 @@ export default defineConfig({
     environment: 'node',
     setupFiles: [path.resolve(__dirname, 'apps/api/test/vitest.setup.ts')],
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json-summary'],
+      // use istanbul provider to produce lcov and json summaries that CI tools expect
+      provider: 'istanbul',
+      reporter: ['text', 'json', 'lcov', 'json-summary'],
       thresholds: {
         lines: 80,
         functions: 80,

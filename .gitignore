@@ -5,3 +5,6 @@ dist/
 .vscode/
 .DS_Store
 coverage/
+
+# Local env for apps/api (do not commit)
+apps/api/.env.local

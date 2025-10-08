@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global module */
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -14,7 +13,5 @@ module.exports = {
     node: true,
     es2022: true
   },
-  rules: {
-    // Add project-specific rules here
-  }
+  rules: {}
 };

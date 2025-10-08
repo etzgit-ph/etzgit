@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global module */
 module.exports = {
   semi: true,
   singleQuote: true,
