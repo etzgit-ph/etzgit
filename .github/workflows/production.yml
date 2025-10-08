@@ -11,5 +11,15 @@ jobs:
         uses: hmarr/auto-approve-action@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy (placeholder)
-        run: echo "Deploying to production (placeholder)"
+      - name: Build & push Docker image (prod)
+        run: ./scripts/build-push-docker.sh latest
+        env:
+          DOCKER_BUILDKIT: 1
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Terraform apply (prod)
+        run: |
+          ./scripts/terraform-ops.sh
+          # Uncomment to auto-apply after approval
+          # terraform apply tfplan
+      - name: Run DB migrations (prod)
+        run: ./scripts/db-migrate.sh
