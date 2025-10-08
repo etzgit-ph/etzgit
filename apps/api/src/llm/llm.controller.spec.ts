@@ -16,12 +16,20 @@ describe('LLMController (demo)', () => {
         {
           provide: LLMService,
           useValue: {
-            generatePatch: jest.fn().mockResolvedValue([{ filePath: 'README.md', proposedContent: 'x', rationale: 'test' }]),
+            generatePatch: jest
+              .fn()
+              .mockResolvedValue([
+                { filePath: 'README.md', proposedContent: 'x', rationale: 'test' },
+              ]),
           },
         },
         {
           provide: ConfigService,
-          useValue: { get: jest.fn().mockImplementation((k) => (k === 'AGENT_RUN_SECRET' ? 'secret' : 'test')) },
+          useValue: {
+            get: jest
+              .fn()
+              .mockImplementation((k) => (k === 'AGENT_RUN_SECRET' ? 'secret' : 'test')),
+          },
         },
         {
           provide: SecurityAuditService,

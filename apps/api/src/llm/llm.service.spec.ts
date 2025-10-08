@@ -22,13 +22,19 @@ describe('LLMService', () => {
   });
 
   it('returns parsed UpgradeProposalDTO array on valid LLM JSON', async () => {
-  // Access the exported mock create function
-  // @ts-ignore
-  const { __mockCreate: mockCreate } = require('openai');
+    // Access the exported mock create function
+    // @ts-ignore
+    const { __mockCreate: mockCreate } = require('openai');
 
     const fakeResp = {
       choices: [
-        { message: { content: JSON.stringify([{ filePath: 'README.md', proposedContent: 'New', rationale: 'Improve' }]) } },
+        {
+          message: {
+            content: JSON.stringify([
+              { filePath: 'README.md', proposedContent: 'New', rationale: 'Improve' },
+            ]),
+          },
+        },
       ],
     };
 
@@ -49,7 +55,8 @@ describe('LLMService', () => {
     // @ts-ignore
     const { __mockCreate: mockCreate } = require('openai');
 
-    const wrapped = 'Here is the patch:\n```json\n[{"filePath":"README.md","proposedContent":"New","rationale":"Improve"}]\n```';
+    const wrapped =
+      'Here is the patch:\n```json\n[{"filePath":"README.md","proposedContent":"New","rationale":"Improve"}]\n```';
     const fakeResp = { choices: [{ message: { content: wrapped } }] };
     mockCreate.mockResolvedValueOnce(fakeResp);
 
@@ -67,7 +74,8 @@ describe('LLMService', () => {
     // @ts-ignore
     const { __mockCreate: mockCreate } = require('openai');
 
-    const wrapped = 'I suggest the following changes:\n[{"filePath":"README.md","proposedContent":"New","rationale":"Improve"}]\nLet me know.';
+    const wrapped =
+      'I suggest the following changes:\n[{"filePath":"README.md","proposedContent":"New","rationale":"Improve"}]\nLet me know.';
     const fakeResp = { choices: [{ message: { content: wrapped } }] };
     mockCreate.mockResolvedValueOnce(fakeResp);
 
@@ -82,8 +90,8 @@ describe('LLMService', () => {
   });
 
   it('throws when LLM returns invalid JSON', async () => {
-  // @ts-ignore
-  const { __mockCreate: mockCreate } = require('openai');
+    // @ts-ignore
+    const { __mockCreate: mockCreate } = require('openai');
 
     const fakeResp = { choices: [{ message: { content: 'not-json' } }] };
     mockCreate.mockResolvedValueOnce(fakeResp);
@@ -119,7 +127,9 @@ describe('LLMService', () => {
     // @ts-ignore
     const { __mockCreate: mockCreate } = require('openai');
 
-    const valid = JSON.stringify([{ filePath: 'README.md', proposedContent: 'New', rationale: 'Because' }]);
+    const valid = JSON.stringify([
+      { filePath: 'README.md', proposedContent: 'New', rationale: 'Because' },
+    ]);
     const fakeResp = { choices: [{ message: { content: valid } }] };
     mockCreate.mockResolvedValueOnce(fakeResp);
 

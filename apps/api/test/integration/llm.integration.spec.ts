@@ -14,7 +14,9 @@ describe('LLMService integration (manual)', () => {
   }
 
   it('calls real OpenAI and returns proposals (manual)', async () => {
-    const mockConfig = { get: jest.fn().mockImplementation((k: string) => key) } as unknown as ConfigService;
+    const mockConfig = {
+      get: jest.fn().mockImplementation((k: string) => key),
+    } as unknown as ConfigService;
     const svc = new LLMService(mockConfig as any);
 
     const req = {

@@ -13,7 +13,9 @@ describe('ExecutorService finalize flow', () => {
       gitRollback: jest.fn(),
     };
 
-    const mockGH: any = { createPullRequest: jest.fn().mockResolvedValue({ data: { html_url: 'http://pr' } }) };
+    const mockGH: any = {
+      createPullRequest: jest.fn().mockResolvedValue({ data: { html_url: 'http://pr' } }),
+    };
 
     (svc as any).gitClientService = mockGit;
     (svc as any).githubService = mockGH;

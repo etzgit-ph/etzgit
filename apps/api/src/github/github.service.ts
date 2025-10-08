@@ -4,8 +4,10 @@ import { Throttler, defaultThrottler } from '@aca/utils';
 
 @Injectable()
 export class GitHubService {
-
-  constructor(private readonly configService: ConfigService, private readonly throttler: Throttler = defaultThrottler) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly throttler: Throttler = defaultThrottler,
+  ) {}
 
   async createPullRequest(branchName: string, title: string, body: string) {
     // Dynamically import Octokit to avoid static ESM import issues in test runners

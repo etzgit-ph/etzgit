@@ -1,7 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OpenAI } from 'openai';
-import { PatchRequestDTOSchema, UpgradeProposalDTOSchema, PatchRequestDTO, UpgradeProposalDTO } from '@aca/shared-types';
+import {
+  PatchRequestDTOSchema,
+  UpgradeProposalDTOSchema,
+  PatchRequestDTO,
+  UpgradeProposalDTO,
+} from '@aca/shared-types';
 import { Throttler, defaultThrottler } from '@aca/utils';
 
 const DEFAULT_RETRY = 2;
@@ -12,13 +17,20 @@ export class LLMService {
   private readonly openai: OpenAI;
   private readonly logger = new Logger(LLMService.name);
 
-  constructor(private readonly configService: ConfigService, private readonly throttler: Throttler = defaultThrottler) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly throttler: Throttler = defaultThrottler,
+  ) {
     // Prefer explicit OPENAI_API_KEY, fallback to legacy LLM_API_KEY if present.
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY') ?? this.configService.get<string>('LLM_API_KEY');
+    const apiKey =
+      this.configService.get<string>('OPENAI_API_KEY') ??
+      this.configService.get<string>('LLM_API_KEY');
 
     if (!apiKey) {
       // No key configured: keep a client constructed without a key so tests that mock the SDK continue to work.
-      this.logger.warn('No OpenAI API key configured (OPENAI_API_KEY or LLM_API_KEY). LLM calls will fail unless provided at runtime.');
+      this.logger.warn(
+        'No OpenAI API key configured (OPENAI_API_KEY or LLM_API_KEY). LLM calls will fail unless provided at runtime.',
+      );
       this.openai = new OpenAI({});
     } else {
       this.openai = new OpenAI({ apiKey });
@@ -87,7 +99,9 @@ export class LLMService {
         lastErr = err;
         attempt += 1;
         const waitMs = RETRY_BASE_MS * Math.pow(2, attempt - 1);
-        this.logger.warn(`OpenAI call failed on attempt ${attempt}/${retries + 1}: ${String(err)}; retrying in ${waitMs}ms`);
+        this.logger.warn(
+          `OpenAI call failed on attempt ${attempt}/${retries + 1}: ${String(err)}; retrying in ${waitMs}ms`,
+        );
         // last attempt will fall through and throw
         // eslint-disable-next-line no-await-in-loop
         await new Promise((r) => setTimeout(r, waitMs));
@@ -136,5 +150,4 @@ export class LLMService {
     // fallback: return original text
     return text.trim();
   }
-
 }

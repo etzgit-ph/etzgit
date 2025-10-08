@@ -6,7 +6,10 @@ import { ConfigService } from '@nestjs/config';
 
 @Controller('llm')
 export class LLMController {
-  constructor(private readonly llm: LLMService, private readonly config: ConfigService) {}
+  constructor(
+    private readonly llm: LLMService,
+    private readonly config: ConfigService,
+  ) {}
 
   // Demo endpoint: returns proposed patches from the LLM (dry-run only)
   @UseGuards(SecretTokenGuard)

@@ -11,7 +11,10 @@ import * as path from 'path';
 @Injectable()
 export class ExecutorService {
   private readonly logger = new Logger(ExecutorService.name);
-  constructor(private readonly gitClientService?: GitClientService, private readonly secretScanner?: SecretScannerService) {}
+  constructor(
+    private readonly gitClientService?: GitClientService,
+    private readonly secretScanner?: SecretScannerService,
+  ) {}
 
   async executeUpgrade(proposals: UpgradeProposalDTO[]): Promise<boolean> {
     this.logger.log('Executing upgrade with proposals: ' + JSON.stringify(proposals));
@@ -71,7 +74,11 @@ export class ExecutorService {
         throw new BadRequestException('Finalization blocked: secrets detected');
       }
 
-      const pr = await gh.createPullRequest(branch, commitMsg, `Automated changes (${proposals.length})`);
+      const pr = await gh.createPullRequest(
+        branch,
+        commitMsg,
+        `Automated changes (${proposals.length})`,
+      );
 
       // record last autonomous PR for status/dashboard
       try {

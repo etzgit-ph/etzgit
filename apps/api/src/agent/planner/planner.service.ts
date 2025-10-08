@@ -10,7 +10,10 @@ const DEFAULT_MAX_FILES = 50;
 @Injectable()
 export class PlannerService {
   private readonly logger = new Logger(PlannerService.name);
-  constructor(private readonly gitClientService?: GitClientService, private readonly maxFiles = DEFAULT_MAX_FILES) {}
+  constructor(
+    private readonly gitClientService?: GitClientService,
+    private readonly maxFiles = DEFAULT_MAX_FILES,
+  ) {}
 
   async determineNextAction(): Promise<PatchRequestDTO[]> {
     try {
@@ -92,9 +95,11 @@ export class PlannerService {
 
   private buildGoalForFile(filePath: string, content: string): string {
     // Keep the prompt concise but informative. The LLM should return a JSON array matching UpgradeProposalDTO.
-    const mission = 'You are an autonomous code maintenance assistant. Your mission is to safely propose minimal, well-justified code or documentation changes that improve correctness, security, or dependencies.';
+    const mission =
+      'You are an autonomous code maintenance assistant. Your mission is to safely propose minimal, well-justified code or documentation changes that improve correctness, security, or dependencies.';
     const constraints = `Constraints:\n- Only propose changes inside the repository paths the agent is allowed to modify: ${MODIFIABLE_PATHS.join(', ')}.\n- Never modify or propose changes to protected paths: ${PROTECTED_PATHS.join(', ')}.\n- Avoid large refactors; prefer small, incremental changes.\n- Do not include secrets or private keys in proposed content.`;
-    const format = 'Output format: Respond ONLY with a JSON array of objects matching UpgradeProposalDTO: [{"filePath": string, "proposedContent": string, "rationale": string}].';
+    const format =
+      'Output format: Respond ONLY with a JSON array of objects matching UpgradeProposalDTO: [{"filePath": string, "proposedContent": string, "rationale": string}].';
     const context = `File: ${filePath}\nExcerpt:\n${content.slice(0, 1000)}\n---`;
 
     return [mission, constraints, format, context].join('\n\n');

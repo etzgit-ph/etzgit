@@ -41,10 +41,14 @@ describe('GitClientService read/write security', () => {
   });
 
   it('throws when attempting to read outside allowed paths', () => {
-    expect(() => service.readFile(path.resolve(__dirname, '..', '..', '..', 'package.json'))).toThrow();
+    expect(() =>
+      service.readFile(path.resolve(__dirname, '..', '..', '..', 'package.json')),
+    ).toThrow();
   });
 
   it('throws when attempting to write outside allowed paths', () => {
-    expect(() => service.writeFile(path.resolve(__dirname, '..', '..', '..', 'package.json'), 'x')).toThrow();
+    expect(() =>
+      service.writeFile(path.resolve(__dirname, '..', '..', '..', 'package.json'), 'x'),
+    ).toThrow();
   });
 });

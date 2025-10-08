@@ -18,7 +18,9 @@ export class GitClientService {
     return MODIFIABLE_PATHS.some((allowed) => {
       const allowedResolved = path.resolve(repoRoot, allowed);
       if (resolved === allowedResolved) return true;
-      const prefix = allowedResolved.endsWith(path.sep) ? allowedResolved : allowedResolved + path.sep;
+      const prefix = allowedResolved.endsWith(path.sep)
+        ? allowedResolved
+        : allowedResolved + path.sep;
       return resolved.startsWith(prefix);
     });
   }
@@ -65,7 +67,9 @@ export class GitClientService {
 
   runTests(command = 'pnpm test --no-coverage'): { success: boolean; output: string } {
     try {
-      const out = execFileSync(command.split(' ')[0], command.split(' ').slice(1), { encoding: 'utf-8' });
+      const out = execFileSync(command.split(' ')[0], command.split(' ').slice(1), {
+        encoding: 'utf-8',
+      });
       return { success: true, output: out };
     } catch (err: any) {
       return { success: false, output: err?.message || String(err) };
