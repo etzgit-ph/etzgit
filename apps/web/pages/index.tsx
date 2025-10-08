@@ -14,7 +14,10 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const base = (process && process.env && process.env.NEXT_PUBLIC_API_URL) || (typeof window !== 'undefined' && (window as any).NEXT_PUBLIC_API_URL) || '';
+        const base =
+          (process && process.env && process.env.NEXT_PUBLIC_API_URL) ||
+          (typeof window !== 'undefined' && (window as any).NEXT_PUBLIC_API_URL) ||
+          '';
         const url = base ? `${base.replace(/\/$/, '')}/api/v1/status` : '/api/v1/status';
         const res = await fetch(url);
         if (res.ok) {

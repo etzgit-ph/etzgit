@@ -1,0 +1,22 @@
+name: Staging Ephemeral
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install pnpm
+        run: npm i -g pnpm
+      - name: Install deps
+        run: pnpm install
+      - name: Run E2E tests
+        run: pnpm -w test:e2e || true
+      - name: Destroy ephemeral infra
+        run: echo "Destroy infra (placeholder)"

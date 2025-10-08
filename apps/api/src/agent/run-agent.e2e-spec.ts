@@ -13,7 +13,9 @@ describe('Agent run endpoint (E2E)', () => {
     // Mock ConfigService for guard
     const mockConfig = { get: (k: string) => (k === 'AGENT_RUN_SECRET' ? secret : undefined) };
 
-    const mockAgentService = { runAutonomousUpgrade: jest.fn().mockResolvedValue({ success: true }) };
+    const mockAgentService = {
+      runAutonomousUpgrade: jest.fn().mockResolvedValue({ success: true }),
+    };
 
     const mod = await Test.createTestingModule({
       controllers: [AgentController],
@@ -21,14 +23,17 @@ describe('Agent run endpoint (E2E)', () => {
         { provide: AgentService, useValue: mockAgentService },
         SecretTokenGuard,
         { provide: 'ConfigService', useValue: mockConfig },
-        { provide: (require('@nestjs/config').ConfigService), useValue: mockConfig },
-        { provide: (require('../common/services/security-audit.service').SecurityAuditService), useValue: { logEvent: jest.fn() } },
+        { provide: require('@nestjs/config').ConfigService, useValue: mockConfig },
+        {
+          provide: require('../common/services/security-audit.service').SecurityAuditService,
+          useValue: { logEvent: jest.fn() },
+        },
       ],
     }).compile();
 
-  app = mod.createNestApplication();
-  // listen on ephemeral port so we can perform real HTTP requests
-  await app.listen(0);
+    app = mod.createNestApplication();
+    // listen on ephemeral port so we can perform real HTTP requests
+    await app.listen(0);
   });
 
   afterAll(async () => {
@@ -54,7 +59,11 @@ describe('Agent run endpoint (E2E)', () => {
     const url = `http://127.0.0.1:${address.port}/api/v1/run-agent`;
 
     const res = await new Promise<http.IncomingMessage>((resolve, reject) => {
-      const r = http.request(url, { method: 'POST', headers: { 'x-agent-secret-key': secret } }, (r) => resolve(r));
+      const r = http.request(
+        url,
+        { method: 'POST', headers: { 'x-agent-secret-key': secret } },
+        (r) => resolve(r),
+      );
       r.on('error', reject);
       r.end();
     });

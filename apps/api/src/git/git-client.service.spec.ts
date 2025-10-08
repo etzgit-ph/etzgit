@@ -26,6 +26,8 @@ describe('GitClientService', () => {
     const service = new GitClientService();
     // Use one of the protected paths defined in constants
     const protectedFile = path.resolve(__dirname, '../../../..', 'SECURITY.md');
-    expect(() => service.writeFile(protectedFile, 'tamper')).toThrow(ProtectedPathModificationError);
+    expect(() => service.writeFile(protectedFile, 'tamper')).toThrow(
+      ProtectedPathModificationError,
+    );
   });
 });

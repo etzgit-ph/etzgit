@@ -1,0 +1,6 @@
+version: v1
+ignore:
+  # Example: ignore a known low risk issue for a short time
+  # - 'npm:debug:20170905':
+  #     - reason: 'Upstream dependency not used in our runtime path'
+  #       expires: '2025-12-31'

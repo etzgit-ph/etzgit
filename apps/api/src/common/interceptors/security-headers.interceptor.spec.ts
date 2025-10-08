@@ -23,14 +23,14 @@ describe('SecurityHeadersInterceptor', () => {
       providers: [
         SecurityHeadersInterceptor,
         { provide: 'ConfigService', useValue: mockConfig },
-        { provide: (require('@nestjs/config').ConfigService), useValue: mockConfig },
+        { provide: require('@nestjs/config').ConfigService, useValue: mockConfig },
       ],
     }).compile();
-  app = mod.createNestApplication();
-  const interceptor = app.get(SecurityHeadersInterceptor);
-  app.useGlobalInterceptors(interceptor);
-  // listen on ephemeral port so we can perform real HTTP requests
-  await app.listen(0);
+    app = mod.createNestApplication();
+    const interceptor = app.get(SecurityHeadersInterceptor);
+    app.useGlobalInterceptors(interceptor);
+    // listen on ephemeral port so we can perform real HTTP requests
+    await app.listen(0);
   });
 
   afterAll(async () => {

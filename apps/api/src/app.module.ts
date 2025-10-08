@@ -21,10 +21,15 @@ import { SecurityAuditService } from './common/services/security-audit.service';
         })
         .parse(process.env as Record<string, unknown>),
     }),
-  AgentModule,
-  SystemModule,
+    AgentModule,
+    SystemModule,
   ],
   controllers: [],
-  providers: [LoggingInterceptor, SecurityHeadersInterceptor, SecretTokenGuard, SecurityAuditService],
+  providers: [
+    LoggingInterceptor,
+    SecurityHeadersInterceptor,
+    SecretTokenGuard,
+    SecurityAuditService,
+  ],
 })
 export class AppModule {}

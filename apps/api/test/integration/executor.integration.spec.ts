@@ -17,7 +17,11 @@ describe('ExecutorService rollback behavior', () => {
     (service as any).gitClientService = mockGit;
 
     const proposals = [
-      { filePath: 'apps/api/src/somefile.ts', proposedContent: 'console.log(1);', rationale: 'test' },
+      {
+        filePath: 'apps/api/src/somefile.ts',
+        proposedContent: 'console.log(1);',
+        rationale: 'test',
+      },
     ];
 
     const result = await service.executeUpgrade(proposals as any);

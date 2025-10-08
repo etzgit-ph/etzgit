@@ -9,7 +9,9 @@ export class SecretScannerService {
     const res = hasSecrets(content);
     if (res.found) {
       const detail = res.findings.map((f) => `${f.pattern}@${f.index}`).join(', ');
-      this.logger.warn(`Secret scanner rejected content for ${context?.filePath || 'unknown'}: ${detail}`);
+      this.logger.warn(
+        `Secret scanner rejected content for ${context?.filePath || 'unknown'}: ${detail}`,
+      );
       throw new BadRequestException(`Secret content detected: ${detail}`);
     }
   }
