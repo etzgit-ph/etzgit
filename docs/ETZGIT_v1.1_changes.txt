@@ -1,0 +1,72 @@
+ETZGIT v1.1 changes
+====================
+
+Release: v1.1
+Date: 2025-10-08
+
+Summary
+-------
+This release focuses on authentication hardening, pluggable local-first secrets management, developer tooling for token generation, and an end-to-end Playwright test for the structured-command human-in-the-loop (HIL) flow.
+
+Key Highlights
+--------------
+- Hybrid authentication guard (AuthGuard)
+  - Accepts legacy agent run secret or JSON Web Tokens.
+  - Uses the jsonwebtoken library for verification (HS256 in dev). Designed to be extended to RS256 / OIDC for production.
+  - Logs security events into the existing SecurityAuditService.
+
+- Pluggable secrets provider pattern
+  - Introduced a `SecretsProvider` interface and a default `LocalFileSecretsProvider` that stores secrets under `.local/secrets.json` (file permissions set for local dev security).
+  - Added an `AwsSecretsProvider` scaffold for future integration with Secrets Manager.
+  - `SecretsService` refactored to delegate to the provider token; the `SecretsModule` picks the provider via environment variable `AGENT_SECRETS_PROVIDER`.
+
+- Developer tooling: token generator
+  - `apps/api/scripts/generate-token.js` added to generate HS256-signed tokens for local development.
+  - `apps/api` package.json exposes a `gen-token` script. Example use:
+    AGENT_JWT_SECRET=dev-secret pnpm -C apps/api run gen-token
+
+- Playwright E2E test
+  - Added `tests/e2e/structured-command.spec.ts` to exercise the structured-command → proposal → approve UI flow using the web UI and intercepted API calls.
+  - The test is intended to run against running dev servers (see How to test below).
+
+Files changed / added (high level)
+---------------------------------
+- apps/api/src/common/guards/auth.guard.ts           (new)
+- apps/api/src/secrets/providers/local-file.provider.ts (new)
+- apps/api/src/secrets/providers/aws.provider.ts    (scaffold)
+- apps/api/src/secrets/secrets.service.ts          (refactor)
+- apps/api/src/secrets/secrets.module.ts           (provider wiring)
+- apps/api/scripts/generate-token.js               (new)
+- apps/api/package.json                            (dev deps + script)
+- tests/e2e/structured-command.spec.ts             (new)
+- docs/ETZGIT_v1.1_changes.txt                     (this file)
+- docs/PR_DESCRIPTION_v1.1.md                      (PR description)
+
+How to test (quick)
+--------------------
+1. Backend unit tests (Jest + Vitest):
+   pnpm -C apps/api test
+
+2. Generate a development token (example):
+   AGENT_JWT_SECRET=dev-secret pnpm -C apps/api run gen-token
+
+3. Run dev servers for API and Web, then run the Playwright E2E test:
+   # start API and web in separate terminals using your usual dev workflow
+   npx playwright test tests/e2e/structured-command.spec.ts
+
+Notes & Next Steps
+------------------
+- Production hardening recommended before deployment:
+  1. Replace HS256 dev tokens with RS256 + an issuer (OIDC or internal signing service).
+  2. Implement OS-native secure key storage (keychain/keytar) and/or fully integrate the AWS Secrets provider.
+  3. Add CI steps to run Playwright tests against ephemeral environments (or use Playwright with a dev server start task).
+
+Security Considerations
+-----------------------
+- The default local-file provider stores secrets in the workspace under `.local/` with developer-focused protections. This is intended for local-first development convenience, not for multi-tenant production.
+- Avoid committing production secrets. Use environment variables + managed secret stores for deployed systems.
+
+Contact / Authors
+-----------------
+Project: ETZGIT (etzgit-ph)
+Maintainers: core contributors and release author in this branch
