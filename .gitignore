@@ -8,3 +8,6 @@ coverage/
 
 # Local env for apps/api (do not commit)
 apps/api/.env.local
+
+# Local secrets file used for development
+.local/secrets.json
