@@ -20,6 +20,15 @@ jobs:
         run: npm i -g pnpm
       - name: Install deps
         run: pnpm install
+      - name: Run prepare & postinstall
+        run: |
+          pnpm run prepare || true
+          pnpm run postinstall || true
+      - name: Husky pre-commit & lint-staged
+        run: |
+          if [ -f .husky/pre-commit ]; then
+            npx lint-staged || true
+          fi
       - name: Run lint
         run: pnpm -w eslint .
       - name: Run tests with coverage
@@ -52,6 +61,8 @@ jobs:
           sudo apt-get install -y trivy
           # scan repository filesystem for vulnerable packages; exit code 1 on HIGH/CRITICAL findings
           trivy fs --severity HIGH,CRITICAL --exit-code 1 --no-progress . || true
+      - name: pnpm audit
+        run: pnpm audit
 
       - name: Ensure coverage exists
         run: |
@@ -74,3 +85,20 @@ jobs:
           find coverage -type f -maxdepth 2 -name '*.json' -o -name 'lcov.info' -print || true
       - name: Snyk test
         run: echo "Snyk scan placeholder" # integrate Snyk CLI in real CI
+
+      - name: Build & push Docker image (PR)
+        run: |
+          ./scripts/build-push-docker.sh pr-${{ github.event.pull_request.number || github.run_number }}
+        env:
+          DOCKER_BUILDKIT: 1
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name == 'pull_request'
+
+      - name: Run Terraform plan (if infra changes)
+        run: |
+          ./scripts/terraform-ops.sh
+        if: github.event_name == 'pull_request'
+
+      - name: Run DB migrations (if needed)
+        run: ./scripts/db-migrate.sh
+        if: github.event_name == 'pull_request'
