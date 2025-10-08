@@ -1,5 +1,7 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+pnpm exec lint-staged
+# Run unit tests related to staged files and enforce coverage thresholds
+pnpm -w test:unit -- --findRelatedTests
+pnpm audit --audit-level=critical
 
 pnpm exec lint-staged
 # Run unit tests related to staged files and enforce coverage thresholds
