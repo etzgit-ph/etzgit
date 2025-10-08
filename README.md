@@ -5,13 +5,31 @@ etzgit is a small monorepo that demonstrates a secure, testable autonomous-agent
 This README explains how to develop, test, and run the project locally and how to contribute safely.
 
 ## Contents
-- apps/api — NestJS application that exposes agent orchestration and services (LLM integration, Git client, GitHub PR creation).
-- packages/config — shared TypeScript configuration used by workspace packages.
-- packages/* — shared helper packages (types, constants, utils).
-- docs/ — documentation and architecture decision records (ADRs).
 
 ## Quick start (local)
 
+## Autonomous Agent Upgrade Workflow
+
+This repository implements a secure, auditable workflow for AI-generated code upgrades using a Human-in-the-Loop (HIL) approval process. All changes proposed by the agent are subject to human review, atomic commit/push, and automated CI/CD validation.
+
+## Key Features
+- Secure file writing with path validation and protected path enforcement
+- Atomic commit, branch, and push operations
+- Automated pull request creation via GitHub API
+- CI/CD validation for AI-generated branches
+- Frontend feedback for proposal approval and PR creation
+
+## Documentation
+- [docs/adr/0003-secure-hil-approval.md](docs/adr/0003-secure-hil-approval.md): Architecture Decision Record for secure HIL approval
+- [docs/governance.md](docs/governance.md): Governance and auditability policy
+- [SECURITY.md](SECURITY.md): Security policy and responsible disclosure
+- [.github/workflows/ai-branch-validation.yml](.github/workflows/ai-branch-validation.yml): CI/CD workflow for AI-generated branches
+
+## Responsible Disclosure
+If you discover a vulnerability, please follow the process in SECURITY.md.
+
+## License
+See LICENSE for details.
 Prerequisites
 - Node.js (recommended 18+)
 - pnpm (the repo is a pnpm workspace)

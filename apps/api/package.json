@@ -11,8 +11,10 @@
     "test:jest": "jest",
     "test:vitest": "vitest run test/",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "gen-token": "node ./scripts/generate-token.js"
   },
+  
   "devDependencies": {
     "@nestjs/cli": "^11.0.10",
     "@nestjs/testing": "^11.1.6",
@@ -26,9 +28,13 @@
     "zod": "^4.1.12"
   },
   "dependencies": {
+    "minimist": "^1.2.8",
+  "jsonwebtoken": "^9.0.0",
     "@nestjs/config": "^4.0.2",
+    "class-validator": "^0.14.2",
     "octokit": "^5.0.3",
     "openai": "^6.2.0",
+    "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   }
 }

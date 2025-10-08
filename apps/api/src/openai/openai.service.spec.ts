@@ -45,4 +45,25 @@ describe('OpenaiService', () => {
     // Optionally, check that OpenAI client is initialized (mocked)
     expect(service['openai']).toBeDefined();
   });
+
+  it('generateChatCompletion returns text on success', async () => {
+    const mockCreate = service['openai'].chat.completions.create as jest.Mock;
+    mockCreate.mockResolvedValue({
+      choices: [{ message: { content: 'hello world' } }],
+    });
+
+    const result = await service.generateChatCompletion('hi');
+    expect(result).toBe('hello world');
+    expect(mockCreate).toHaveBeenCalledWith({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: 'hi' }],
+    });
+  });
+
+  it('generateChatCompletion throws InternalServerErrorException on API failure', async () => {
+    const mockCreate = service['openai'].chat.completions.create as jest.Mock;
+    mockCreate.mockRejectedValueOnce(new Error('429 Too Many Requests'));
+
+    await expect(service.generateChatCompletion('hi')).rejects.toThrow();
+  });
 });

@@ -1,6 +1,7 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OpenAI } from 'openai';
+import { SecretsService } from '../secrets/secrets.service';
 
 @Injectable()
 export class OpenaiService {
@@ -8,9 +9,25 @@ export class OpenaiService {
   private readonly logger = new Logger(OpenaiService.name);
   private readonly defaultModel: string;
 
-  constructor(private readonly configService: ConfigService) {
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+  constructor(private readonly configService: ConfigService, @Optional() private readonly secretsService?: SecretsService) {
+    const fallbackKey = this.configService.get<string>('OPENAI_API_KEY');
     this.defaultModel = this.configService.get<string>('OPENAI_DEFAULT_MODEL') || 'gpt-3.5-turbo';
+
+    // Try to load from SecretsService first (local file mock). If it is synchronous, use it; otherwise fall back to env.
+    let apiKey = fallbackKey;
+    try {
+      if (this.secretsService && typeof this.secretsService.getSecrets === 'function') {
+        // Call getSecrets but only accept synchronous result for initialization.
+        const maybe = this.secretsService.getSecrets('dev');
+        if (!(maybe && typeof (maybe as any).then === 'function')) {
+          const resolved = maybe as any;
+          apiKey = resolved?.openaiApiKey || fallbackKey;
+        }
+      }
+    } catch (err) {
+      apiKey = fallbackKey;
+    }
+
     this.openai = new OpenAI({ apiKey });
   }
 

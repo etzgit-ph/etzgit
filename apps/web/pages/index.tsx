@@ -8,6 +8,8 @@ type Status = {
   repoClean?: boolean | null;
 } | null;
 
+import TabNavigation from '../src/components/TabNavigation';
+
 export default function Home() {
   const [status, setStatus] = useState<Status>(null);
 
@@ -40,6 +42,7 @@ export default function Home() {
   return (
     <main style={{ fontFamily: 'system-ui, sans-serif', padding: 24 }}>
       <h1>Agent Status</h1>
+  <TabNavigation />
       {status ? (
         <div>
           <p>
